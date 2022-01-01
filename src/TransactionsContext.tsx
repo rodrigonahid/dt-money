@@ -14,14 +14,17 @@ interface ITransactionProvider {
   children: ReactNode;
 }
 
-type CreateTransactionType = Pick<
-  ITransaction,
-  "title" | "amount" | "category" | "type"
->;
+interface CreateTransactionType {
+  title: string;
+  amount: number;
+  category: string;
+  type: string;
+  createdAt: Date;
+}
 
 interface TransactionContextData {
   transaction: ITransaction[];
-  createTransaction: (transaction: CreateTransactionType) => void;
+  createTransaction: (transaction: CreateTransactionType) => Promise<void>;
 }
 
 export const TransactionContext = createContext<TransactionContextData>(
@@ -37,8 +40,11 @@ export function TransactionsProvider({ children }: ITransactionProvider) {
       .then((res) => setTransaction(res.data.transactions));
   }, []);
 
-  function createTransaction(transaction: CreateTransactionType) {
-    api.post("transactions", transaction);
+  async function createTransaction(transactionInput: CreateTransactionType) {
+    const response = await api.post("transactions", transactionInput);
+    const { transaction: resTransaction } = response.data;
+
+    setTransaction([...transaction, resTransaction]);
   }
 
   return (

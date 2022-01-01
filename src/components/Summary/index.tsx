@@ -6,8 +6,30 @@ import { useContext } from "react";
 import { TransactionContext } from "../../TransactionsContext";
 
 export function Summary() {
-  const data = useContext(TransactionContext);
-  console.log(data);
+  const { transaction } = useContext(TransactionContext);
+
+  const formatNumber = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+
+  const summary = transaction.reduce(
+    (acc, item) => {
+      if (item.type === "deposit") {
+        acc.deposit += item.amount;
+        acc.total += item.amount;
+      } else if (item.type === "withdraw") {
+        acc.withdraw += item.amount;
+        acc.total -= item.amount;
+      }
+      return acc;
+    },
+    {
+      deposit: 0,
+      withdraw: 0,
+      total: 0,
+    }
+  );
 
   return (
     <Container>
@@ -16,21 +38,21 @@ export function Summary() {
           <p>Entradas</p>
           <img src={Income} alt="income" />
         </header>
-        <strong>R$1.000,00</strong>
+        <strong>{formatNumber.format(summary.deposit)}</strong>
       </div>
       <div>
         <header>
           <p>Saídas</p>
           <img src={Outcome} alt="outcome" />
         </header>
-        <strong>R$1.000,00</strong>
+        <strong>{formatNumber.format(summary.withdraw)}</strong>
       </div>
       <div>
         <header>
           <p>Total</p>
           <img src={Total} alt="total" />
         </header>
-        <strong>R$1.000,00</strong>
+        <strong>{formatNumber.format(summary.total)}</strong>
       </div>
     </Container>
   );
