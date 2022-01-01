@@ -5,7 +5,7 @@ import CloseImg from "../../assets/close.svg";
 import IncomeImg from "../../assets/income.svg";
 import OutcomeImg from "../../assets/outcome.svg";
 import { FormEvent, useState, useContext } from "react";
-import { TransactionContext } from "../../TransactionsContext";
+import { useTransactions } from "../../hooks/useTransactions";
 
 interface INewTransactionModal {
   isOpen: boolean;
@@ -18,7 +18,7 @@ export function NewTransactionModal({
   isOpen,
   onCloseModal,
 }: INewTransactionModal) {
-  const { createTransaction } = useContext(TransactionContext);
+  const { createTransaction } = useTransactions();
 
   const [type, setType] = useState("deposit");
   const [title, setTitle] = useState("");

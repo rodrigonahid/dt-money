@@ -2,11 +2,10 @@ import { Container } from "./style";
 import Income from "../../assets/income.svg";
 import Outcome from "../../assets/outcome.svg";
 import Total from "../../assets/total.svg";
-import { useContext } from "react";
-import { TransactionContext } from "../../TransactionsContext";
+import { useTransactions } from "../../hooks/useTransactions";
 
 export function Summary() {
-  const { transaction } = useContext(TransactionContext);
+  const { transaction } = useTransactions();
 
   const formatNumber = new Intl.NumberFormat("pt-BR", {
     style: "currency",
